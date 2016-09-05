@@ -23,6 +23,8 @@ class Main extends Sprite {
 	var cy:Int = Std.int(240 / 2);
 
 	var z_shift:Float = 0;
+	
+	var move:Float = 0;
 
 	public function new () {
 		super ();
@@ -55,6 +57,10 @@ class Main extends Sprite {
 		});
 	}
 
+	function project_x(world_x:Float, world_z:Float): Int {
+		return cx + Std.int(((world_x + cameraX)*scaling) / world_z);
+	}
+
 	function project_y(world_y:Float, world_z:Float) : Int {
 		return cy + Std.int(((world_y + cameraY) * scaling) / world_z);
 	}
@@ -69,10 +75,10 @@ class Main extends Sprite {
 		];
 	}
 
-	function fillRoadPoly(startY:Int, endY:Int, x1:Int, x2:Int, x3:Int, x4:Int, texture:BitmapData, y_offset:Float = 0) {
-		for(scanLine in startY...endY) {
+	function fillRoadPoly(yStart:Int, yEnd:Int, x1:Int, x2:Int, x3:Int, x4:Int, texture:BitmapData) {
+		for(scanLine in yStart...yEnd) {
 			if(scanLine >= 320) return;
-			var process:Float = (scanLine - startY) / (endY - startY);
+			var process:Float = (scanLine - yStart) / (yEnd - yStart);
 
 			var xStart = Std.int(x1 + (x3 - x1) * process);
 			var xEnd = Std.int(x2 + (x4 - x2) * process);
@@ -86,6 +92,16 @@ class Main extends Sprite {
 			}
 		}
 	}
+	
+	function drawPolygon(verts:Array<Vertex>, texture:BitmapData, color:UInt) : Void {
+		if(verts.length == 4) {
+			for(v in verts) {
+				
+			}
+		} else {
+			throw "A polygon should contain 4 vertices";
+		}
+	}
 
 	function onEnterFrame(e:Event) : Void {
 		var segment_count = 25;
@@ -94,16 +110,15 @@ class Main extends Sprite {
 		bitmapData.fillRect(new Rectangle(0, project_y(0, segment_count), 320, 120), 0x008833);
 
 		for(segment in 1...segment_count) {
-
-			var p1 = project(-160, 0, (segment_count - segment) + z_shift + 1);
-			var p2 = project(160, 0, (segment_count - segment) + z_shift + 1);
-			var p3 = project(-160, 0, (segment_count - segment) + z_shift);
-			var p4 = project(160, 0, (segment_count - segment) + z_shift);
+			var p1 = project(-160, 0, (segment_count - segment) + 1);
+			var p2 = project(160, 0, (segment_count - segment) + 1);
+			var p3 = project(-160, 0, (segment_count - segment));
+			var p4 = project(160, 0, (segment_count - segment));
 
 			fillRoadPoly(p1[1], p3[1], p1[0], p2[0], p3[0], p4[0], roadTexture);
 		}
 
-		z_shift -= 0.05;
+		z_shift -= 0.01;
 
 		while(z_shift < -1) {
 			z_shift += 1;
