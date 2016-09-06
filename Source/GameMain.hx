@@ -40,13 +40,18 @@ class GameMain extends Screen {
       frameBuffer.draw(background);
       frameBuffer.fillRect(new Rectangle(0, 120, 320, 120), 0xff0a0026);
 
-      for(segment in segments) {
+      var n_seg = segments.length-1;
+
+      while(n_seg >= 1) {
+        var segment = segments[n_seg];
         var p1 = project(segment.x - 160, segment.y, segment.z + 0.5);
         var p2 = project(segment.x + 160, segment.y, segment.z + 0.5);
         var p3 = project(segment.x - 160, segment.y, segment.z);
         var p4 = project(segment.x + 160, segment.y, segment.z);
 
         fillRoadPoly(p1[1], p3[1], p1[0], p2[0], p3[0], p4[0], roadTexture, z_shift);
+
+        n_seg--;
       }
 
       z_shift -= 0.05;
