@@ -26,6 +26,9 @@ class GameMain extends Screen {
   public function new() {
     super();
 
+    ferrari.x = (Screen.FRAME_WIDTH - ferrari.bitmapData.width) / 2;
+    ferrari.y = Screen.FRAME_HEIGHT - ferrari.bitmapData.height;
+
     for(i in 0...60) {
       segments.push({
         x: 0,

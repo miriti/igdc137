@@ -8,8 +8,9 @@ class PSprite  {
   public var x(default, set):Float = 0;
   public var y(default, set):Float = 0;
 
+  public var bitmapData:BitmapData;
+
   private var matrix:Matrix = new Matrix();
-  private var bitmapData:BitmapData;
 
   function set_x(value:Float):Float {
     matrix.tx = value;
