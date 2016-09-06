@@ -22,8 +22,6 @@ class PSprite  {
   }
 
   public function new(bitmapData:BitmapData) {
-    super();
-
     this.bitmapData = bitmapData;
   }
 

@@ -9,8 +9,7 @@ import openfl.Lib;
 
 class Main extends Sprite {
 	public static var instance:Main;
-
-	var currentScreen(default, set): Screen;
+	public var currentScreen(default, set): Screen;
 
 	var bitmap:Bitmap;
 
@@ -28,8 +27,8 @@ class Main extends Sprite {
 		bitmap.scaleX = bitmap.scaleY = 2;
 		addChild(bitmap);
 
-		var fps = new FPS(0, 0, 0xf556f2);
-		addChild(fps);
+		/*var fps = new FPS(0, 0, 0xf556f2);
+		addChild(fps);*/
 
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 

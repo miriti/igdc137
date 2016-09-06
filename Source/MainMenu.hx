@@ -5,6 +5,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import openfl.Assets;
+import openfl.system.System;
 
 class MenuLogo {
   var texts:Array<TextField> = new Array<TextField>();
@@ -90,6 +91,10 @@ class MenuItem {
     surface.draw(shadeTextField, shadeTextField.transform.matrix);
     surface.draw(textField, textField.transform.matrix);
   }
+  
+  public function act():Void {
+    action();
+  }
 }
 
 class MainMenu extends Screen {
@@ -123,11 +128,15 @@ class MainMenu extends Screen {
   public function new() {
     super();
 
-    items.push(new MenuItem("Start", function() {}));
+    items.push(new MenuItem("Start", function() {
+        Main.instance.currentScreen = new GameMain();
+        }));
     items.push(new MenuItem("Options", function() {}));
 
     #if ((!html)&&(!flash))
-    items.push(new MenuItem("Quit", function() {}));
+    items.push(new MenuItem("Quit", function() {
+        System.exit(0);
+        }));
     #end
 
     items[0].selected = true;
@@ -153,7 +162,7 @@ class MainMenu extends Screen {
   override public function keyDown(keyCode:Int):Void {
 
     if (keyCode == 13) {
-      // TODO: Execute action
+      items[selected_item].act();
     }
 
     if ((keyCode == 38) || (keyCode == 87)) {

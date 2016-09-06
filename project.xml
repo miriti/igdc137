@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 
-	<meta title="Road Vice'85" package="ru.miriti.neonrace" version="1.0.0" company="Michael Miriti" />
-	<app main="Main" path="Export" file="RoadVice85" />
+	<meta title="Road Vice'85" package="ru.miriti.neonrace" version="1.0.0" company="Michael Miriti"/>
+	<app main="Main" path="Export" file="RoadVice85"/>
 
-	<source path="Source" />
+	<source path="Source"/>
 
-	<haxelib name="openfl" />
+	<haxelib name="openfl"/>
 
-	<assets path="Assets" rename="assets" />
-	<assets path="Sound" rename="sound" />
+	<assets path="Assets" rename="assets"/>
+	<assets path="Sound" rename="sound"/>
 
-	<window width="640" height="480" fps="119" />
+	<window width="640" height="480" fps="119" resizable="false" />
 
 </project>
