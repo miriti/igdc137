@@ -12,8 +12,10 @@ typedef RoadSegment = {
 };
 
 class GameMain extends Screen {
-  var roadTexture:BitmapData;
-  var background:BitmapData;
+  var roadTexture:BitmapData = Assets.getBitmapData("assets/road.png");
+  var background:BitmapData = Assets.getBitmapData("assets/bg.png");
+  var ferrari:PSprite = new PSprite(Assets.getBitmapData("assets/ferrari.png"));
+
   var background_transform:Matrix;
   var z_shift:Float = 0;
 
@@ -23,9 +25,6 @@ class GameMain extends Screen {
 
   public function new() {
     super();
-
-    roadTexture = Assets.getBitmapData("assets/road.png");
-    background = Assets.getBitmapData("assets/bg.png");
 
     for(i in 0...60) {
       segments.push({
@@ -74,6 +73,8 @@ class GameMain extends Screen {
       while(z_shift < 0) {
         z_shift = 1 + z_shift;
       }
+
+      ferrari.draw(frameBuffer);
     }
 
   }

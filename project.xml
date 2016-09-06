@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 
-	<meta title="NeonRace" package="ru.miriti.neonrace" version="1.0.0" company="Michael Miriti" />
-	<app main="Main" path="Export" file="Game" />
+	<meta title="Road Vice'85" package="ru.miriti.neonrace" version="1.0.0" company="Michael Miriti" />
+	<app main="Main" path="Export" file="RoadVice85" />
 
 	<source path="Source" />
 
