@@ -3,8 +3,7 @@ module.exports = {
     functionMatch: function(terminal_output) {
         var matches = [];
         var regexes = [
-            /([^:]+)\:([0-9]+)\: characters ([0-9]+)\-([0-9]+) \: (.+)/,
-            /([^:]+)\:([0-9]+)\: lines ([0-9]+)\-([0-9]+) \: (.+)/
+            /([^:]+)\:([0-9]+)\: (characters|lines) ([0-9]+)\-([0-9]+) \: (.+)/
         ];
 
         terminal_output.split(/\n/).forEach(function(line) {
@@ -12,11 +11,22 @@ module.exports = {
                 var m = line.match(regexes[i]);
 
                 if (m !== null) {
-                    matches.push({
+                    var lint = {
                         file: m[1],
                         line: m[2],
-                        message: m[5]
-                    });
+                        message: m[6]
+                    };
+
+                    if(m[3] == 'characters') {
+                        lint['col'] = m[4];
+                        lint['col_end'] = m[5];
+                    }
+
+                    if(m[3] == 'lines') {
+                        // TODO
+                    }
+
+                    matches.push(lint);
                 }
             }
         });

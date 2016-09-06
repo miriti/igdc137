@@ -36,7 +36,7 @@ class Main extends Sprite {
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
-		currentScreen = new GameMain();
+		currentScreen = new MainMenu();
 	}
 
 	function onKeyDown(e:KeyboardEvent) : Void {
