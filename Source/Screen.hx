@@ -21,15 +21,15 @@ class Screen  {
     frameBuffer = new BitmapData(FRAME_WIDTH, FRAME_HEIGHT, false, CLEAR_COLOR);
   }
 
-  function project_x(world_x:Float, world_z:Float): Int {
+  public function project_x(world_x:Float, world_z:Float): Int {
     return cx + Std.int(((world_x + cameraX)*scaling) / world_z);
   }
 
-  function project_y(world_y:Float, world_z:Float) : Int {
+  public function project_y(world_y:Float, world_z:Float) : Int {
     return cy + Std.int(((world_y + cameraY) * scaling) / world_z);
   }
 
-  function project(world_x:Float, world_y:Float, world_z:Float) : Array<Int> {
+  public function project(world_x:Float, world_y:Float, world_z:Float) : Array<Int> {
     if(world_z == 0) {
       world_z = 1;
     }
