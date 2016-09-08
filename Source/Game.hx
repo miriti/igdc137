@@ -11,7 +11,7 @@ typedef RoadSegment = {
   z: Float
 };
 
-class GameMain extends Screen {
+class Game extends Screen {
   var roadTexture:BitmapData = Assets.getBitmapData("assets/road.png");
   var background:BitmapData = Assets.getBitmapData("assets/bg.png");
   var ferrari:PSprite = new PSprite(Assets.getBitmapData("assets/ferrari.png"));

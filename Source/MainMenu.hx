@@ -129,7 +129,7 @@ class MainMenu extends Screen {
     super();
 
     items.push(new MenuItem("Start", function() {
-        Main.instance.currentScreen = new GameMain();
+        Main.instance.currentScreen = new Game();
         }));
     items.push(new MenuItem("Options", function() {}));
 
