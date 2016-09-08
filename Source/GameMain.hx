@@ -19,7 +19,13 @@ class GameMain extends Screen {
   var background_transform:Matrix;
   var z_shift:Float = 0;
 
-  public static inline var ROAD_HWIDTH:Float = 200;
+  var car_pos = {
+    x: 0.0,
+    z: 1.25,
+    y: 0.0
+  }
+
+  public static inline var ROAD_HWIDTH:Float = 160;
 
   var segments:Array<RoadSegment> = new Array<RoadSegment>();
 
@@ -29,12 +35,30 @@ class GameMain extends Screen {
     ferrari.x = (Screen.FRAME_WIDTH - ferrari.bitmapData.width) / 2;
     ferrari.y = Screen.FRAME_HEIGHT - ferrari.bitmapData.height;
 
-    for(i in 0...60) {
+    var phase:Float = 0;
+
+    for(i in 0...500) {
       segments.push({
-        x: 0,
-        y: -(i*i),
-        z: i*0.5
+        x: Math.sin(phase) * 200,
+        y: Math.sin(phase) * 300,
+        z: 1 + i*0.5
         });
+
+        phase += Math.PI / 32;
+      }
+    }
+
+    function scrollRoad() : Void {
+      var dx = segments[0].x - segments[1].x;
+      var dy = segments[0].y - segments[1].y;
+      var dz = segments[0].z - segments[1].z;
+
+      segments.shift();
+
+      for(s in segments) {
+        s.x += dx;
+        s.y += dy;
+        s.z += dz;
       }
     }
 
@@ -43,23 +67,27 @@ class GameMain extends Screen {
 
       frameBuffer.draw(background);
 
-      var min_y:Float = 0;
-      var h_z:Float = 0;
+      var n_seg = Std.int(Math.min(30, segments.length-1));
 
-      for(s in segments ){
-          if(s.y < min_y) {
-              min_y = s.y;
-              h_z = s.z;
-          }
+      var hor_y = 240;
+      var hor_z:Float = 0;
+
+      for(i in 0...n_seg) {
+        var p_y = project_y(segments[i].y, segments[i].z);
+
+        if(p_y < hor_y) {
+          hor_y = p_y;
+          hor_z = segments[i].z;
+        }
       }
-
-      frameBuffer.fillRect(new Rectangle(0, project_y(min_y, h_z), 320, 240), 0xff0a0026);
-
-      var n_seg = segments.length-1;
 
       while(n_seg >= 1) {
         var segment = segments[n_seg];
         var next_segment = segments[n_seg-1];
+
+        if(segment.z == hor_z) {
+          frameBuffer.fillRect(new Rectangle(0, hor_y, Screen.FRAME_WIDTH, Screen.FRAME_HEIGHT-hor_y), 0xff18183d);
+        }
 
         var p1 = project(segment.x - ROAD_HWIDTH, segment.y, segment.z);
         var p2 = project(segment.x + ROAD_HWIDTH, segment.y, segment.z);
@@ -75,7 +103,13 @@ class GameMain extends Screen {
 
       while(z_shift < 0) {
         z_shift = 1 + z_shift;
+        scrollRoad();
       }
+
+      car_pos.y = segments[0].y + (segments[1].y - segments[0].y)*0.5;
+
+      ferrari.x = project_x(car_pos.x, car_pos.z) - (ferrari.bitmapData.width / 2 );
+      ferrari.y = project_y(car_pos.y, car_pos.z) - ferrari.bitmapData.height;
 
       ferrari.draw(frameBuffer);
     }
