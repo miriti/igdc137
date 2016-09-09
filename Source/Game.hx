@@ -3,6 +3,8 @@ package ;
 import openfl.geom.Rectangle;
 import openfl.geom.Matrix;
 import openfl.display.BitmapData;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 import openfl.Assets;
 
 typedef RoadSegment = {
@@ -23,6 +25,8 @@ class Game extends Screen {
 
   var playerCar:PlayerCar;
   var cars:Array<Car> = new Array<Car>();
+  
+  var rpm_hud:TextField;
 
   public static inline var ROAD_HWIDTH:Float = 160;
 
@@ -58,6 +62,12 @@ class Game extends Screen {
       phase_x += Math.PI / 32;
       phase_y += Math.PI / 32;
     }
+    
+    rpm_hud = new TextField();
+    rpm_hud.setTextFormat(new TextFormat("_sans", 20, 0xffffff));
+    rpm_hud.text = "0 rpm";
+    rpm_hud.x = 0;
+    rpm_hud.y = 320 - rpm_hud.textHeight;
   }
 
   function scrollRoad() : Void {
@@ -111,10 +121,20 @@ class Game extends Screen {
       n_seg--;
     }
 
+    playerCar.update();
+
     for(car in cars) {
-      car.update();
+      //car.update();
       car.draw(this);
     }
+    
+    rpm_hud.text = [
+      "gear: " + playerCar.gear,
+      playerCar.rpm + " rpm",
+      playerCar.speed + " km/h"
+      ].join("\n");
+      
+    frameBuffer.draw(rpm_hud); //, rpm_hud.transform.matrix);
 
     /*z_shift -= 0.1;*/
 
@@ -125,19 +145,30 @@ class Game extends Screen {
   }
 
   override public function keyDown(keyCode:Int): Void {
+    trace( keyCode );
+
+    if(keyCode == 81) {
+      playerCar.gotoGear(playerCar.gear+1);
+    }
+
+    if(keyCode == 90) {
+      playerCar.gotoGear(playerCar.gear-1);
+    }
 
     if(keyCode == 27) {
       Main.instance.currentScreen = new PauseMenu();
     }
 
     if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
-      playerCar.accelerateStart();
+      /*playerCar.accelerateStart();*/
+      playerCar.throttle = 1;
     }
   }
 
   override public function keyUp(keyCode:Int): Void {
     if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
-      playerCar.accelerateEnd();
+      /*playerCar.accelerateEnd();*/
+      playerCar.throttle = 0;
     }
   }
 }

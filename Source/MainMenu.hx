@@ -25,7 +25,7 @@ class MainMenu extends Screen {
     /**
      * Main Menu
      */
-    menu_main.addItem("Start", function() {
+    menu_main.addItem("New Game", function() {
       Main.instance.currentScreen = new Game();
     });
 

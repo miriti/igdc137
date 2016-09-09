@@ -9,8 +9,4 @@ class PlayerCar extends Car {
     /*playEngineSound();*/
   }
 
-  public function accelerateStart(){}
-
-  public function accelerateEnd(){}
-
 }
