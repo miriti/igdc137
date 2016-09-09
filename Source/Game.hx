@@ -19,7 +19,7 @@ class Game extends Screen {
   var background_transform:Matrix;
   var z_shift:Float = 0;
 
-  var playerCar:Car;
+  var playerCar:PlayerCar;
   var cars:Array<Car> = new Array<Car>();
 
   public static inline var ROAD_HWIDTH:Float = 160;
@@ -119,13 +119,13 @@ class Game extends Screen {
       scrollRoad();
     }
   }
-  
+
   override public function keyDown(keyCode:Int): Void {
     if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
       playerCar.accelerateStart();
     }
   }
-  
+
   override public function keyUp(keyCode:Int): Void {
     if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
       playerCar.accelerateEnd();

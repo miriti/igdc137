@@ -41,137 +41,60 @@ class MenuLogo {
   }
 }
 
-class MenuItem {
-  public var y(default, set):Float;
-  public var selected(default, set):Bool;
-
-  var title: String;
-  var action: Void -> Void;
-  var textField: TextField;
-  var shadeTextField: TextField;
-
-  var itemTextFormat: TextFormat = new TextFormat(Assets.getFont("assets/font/stormfaze.ttf").fontName, 32, 0xa21487);
-  var shadeTextFormat: TextFormat = new TextFormat(Assets.getFont("assets/font/stormfaze.ttf").fontName, 32, 0x310242);
-  var selectedTextFormat: TextFormat = new TextFormat(Assets.getFont("assets/font/stormfaze.ttf").fontName, 32, 0xf556f2);
-
-  function set_y(value:Float):Float {
-    textField.y = value;
-    shadeTextField.y = value + 2;
-    return y = value;
-  }
-
-  function set_selected(value:Bool):Bool {
-    if (value) {
-      textField.setTextFormat(selectedTextFormat);
-    } else {
-      textField.setTextFormat(itemTextFormat);
-    }
-
-    return selected = value;
-  }
-
-  public function new(title:String, action: Void -> Void) {
-    this.title = title;
-    this.action = action;
-
-    selectedTextFormat.align = shadeTextFormat.align = itemTextFormat.align = TextFormatAlign.CENTER;
-
-    textField = new TextField();
-    textField.text = title;
-    textField.setTextFormat(itemTextFormat);
-
-    shadeTextField = new TextField();
-    shadeTextField.text = title;
-    shadeTextField.setTextFormat(shadeTextFormat);
-
-    textField.width = shadeTextField.width = Screen.FRAME_WIDTH;
-  }
-
-  public function draw(surface:BitmapData): Void {
-    surface.draw(shadeTextField, shadeTextField.transform.matrix);
-    surface.draw(textField, textField.transform.matrix);
-  }
-  
-  public function act():Void {
-    action();
-  }
-}
-
 class MainMenu extends Screen {
   var bg:BitmapData = Assets.getBitmapData('assets/bg.png');
   var logo:MenuLogo = new MenuLogo();
 
-  var items:Array<MenuItem> = new Array<MenuItem>();
-
-  var selected_item(default, set):Int = 0;
-
-  function set_selected_item(value:Int):Int {
-    selected_item = value;
-
-    if(value < 0) {
-      selected_item = items.length-1;
-    }
-
-    if(value > items.length-1) {
-      selected_item = 0;
-    }
-
-    for(item in items) {
-      item.selected = false;
-    }
-
-    items[selected_item].selected = true;
-
-    return selected_item;
-  }
+  var menu_main:Menu = new Menu();
+  var options_menu:Menu = new Menu(22);
+  var currentMenu:Menu;
 
   public function new() {
     super();
 
-    items.push(new MenuItem("Start", function() {
-        Main.instance.currentScreen = new Game();
-        }));
-    items.push(new MenuItem("Options", function() {}));
+    /**
+     * Main Menu
+     */
+    menu_main.addItem("Start", function() {
+      Main.instance.currentScreen = new Game();
+    });
+
+    menu_main.addItem("Options", function() {
+      currentMenu = options_menu;
+      options_menu.selected_item = 0;
+    });
 
     #if ((!html)&&(!flash))
-    items.push(new MenuItem("Quit", function() {
-        System.exit(0);
-        }));
+    menu_main.addItem("Quit", function() {
+      System.exit(0);
+    });
     #end
 
-    items[0].selected = true;
+    /**
+     * Options Menu
+     */
+    options_menu.addItem("Transmission: auto", function() {});
+    options_menu.addItem("Accelerate: W", function() {});
+    options_menu.addItem("Brake: S", function() {});
 
-    var ty = 100;
-    for(item in items) {
-      item.y = ty;
+    options_menu.addItem("< Back", function() {
+      currentMenu = menu_main;
+    });
 
-      ty+=40;
-    }
+    options_menu.selected_item = menu_main.selected_item = 0;
 
+    currentMenu = menu_main;
   }
 
   override public function render() : Void {
       frameBuffer.draw(bg);
       logo.draw(frameBuffer);
 
-      for(item in items) {
-        item.draw(frameBuffer);
-      }
+      currentMenu.draw(frameBuffer);
   }
 
   override public function keyDown(keyCode:Int):Void {
-
-    if (keyCode == 13) {
-      items[selected_item].act();
-    }
-
-    if ((keyCode == 38) || (keyCode == 87)) {
-      selected_item--;
-    }
-
-    if ((keyCode == 40) || (keyCode == 83)) {
-      selected_item++;
-    }
+    currentMenu.keyDown(keyCode);
   }
 
 }

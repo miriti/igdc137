@@ -5,7 +5,9 @@ import openfl.events.KeyboardEvent;
 import openfl.display.Sprite;
 import openfl.display.FPS;
 import openfl.display.Bitmap;
+import openfl.media.Sound;
 import openfl.Lib;
+import openfl.Assets;
 
 class Main extends Sprite {
 	public static var instance:Main;
@@ -22,6 +24,8 @@ class Main extends Sprite {
 		super ();
 
 		instance = this;
+
+		Assets.getSound("assets/sound/music.ogg").play(0, 9999);
 
 		bitmap = new Bitmap();
 		bitmap.scaleX = bitmap.scaleY = 2;

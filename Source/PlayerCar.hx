@@ -5,12 +5,12 @@ class PlayerCar extends Car {
 
   public function new(game: Game) {
     super(game);
-    
-    playEngineSound();
+
+    /*playEngineSound();*/
   }
-  
+
   public function accelerateStart(){}
-    
+
   public function accelerateEnd(){}
-  
+
 }
