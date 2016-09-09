@@ -29,7 +29,7 @@ class Game extends Screen {
   public function new() {
     super();
 
-    playerCar = new Car();
+    playerCar = new PlayerCar(this);
     playerCar.z = 1;
 
     for(i in 0...3) {
@@ -112,11 +112,23 @@ class Game extends Screen {
       car.draw(this);
     }
 
-    z_shift -= 0.1;
+    /*z_shift -= 0.1;*/
 
     while(z_shift < 0) {
       z_shift = 1 + z_shift;
       scrollRoad();
+    }
+  }
+  
+  override public function keyDown(keyCode:Int): Void {
+    if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
+      playerCar.accelerateStart();
+    }
+  }
+  
+  override public function keyUp(keyCode:Int): Void {
+    if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
+      playerCar.accelerateEnd();
     }
   }
 }
