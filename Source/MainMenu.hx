@@ -4,46 +4,13 @@ import openfl.display.BitmapData;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
+import openfl.media.Sound;
 import openfl.Assets;
 import openfl.system.System;
 
-class MenuLogo {
-  var texts:Array<TextField> = new Array<TextField>();
-  var phases:Array<Float> = new Array<Float>();
-
-  public function new() {
-    var colors:Array<UInt> = [0x310242, 0x77106b, 0xa21487, 0xf556f2];
-    var i = 0;
-
-    for(color in colors) {
-      var f = new TextFormat(Assets.getFont("assets/font/StillTime.ttf").fontName, 72, color);
-      f.align = TextFormatAlign.CENTER;
-
-      var t = new TextField();
-      t.text = "Road Vice'85";
-      t.width = 320;
-      t.x = i * -2;
-      t.y = i * -2;
-      t.setTextFormat(f);
-
-      texts.push(t);
-
-      i++;
-    }
-  }
-
-  public function draw(surface:BitmapData) {
-    var i = 0;
-    do {
-      var t = texts[i];
-      surface.draw(t, t.transform.matrix);
-    } while (i++ < texts.length-1);
-  }
-}
-
 class MainMenu extends Screen {
   var bg:BitmapData = Assets.getBitmapData('assets/bg.png');
-  var logo:MenuLogo = new MenuLogo();
+  var logo:MenuLogo = new MenuLogo("Road Vice'85");
 
   var menu_main:Menu = new Menu();
   var options_menu:Menu = new Menu(22);
@@ -51,6 +18,9 @@ class MainMenu extends Screen {
 
   public function new() {
     super();
+
+    logo.x = 160;
+    logo.y = 50;
 
     /**
      * Main Menu
@@ -88,7 +58,8 @@ class MainMenu extends Screen {
 
   override public function render() : Void {
       frameBuffer.draw(bg);
-      logo.draw(frameBuffer);
+      logo.update();
+      frameBuffer.draw(logo, logo.transform.matrix);
 
       currentMenu.draw(frameBuffer);
   }

@@ -8,8 +8,6 @@ import openfl.media.Sound;
 import openfl.Assets;
 
 class MenuItem {
-  private var selectSound:Sound = Assets.getSound("assets/sound/menu_select.wav");
-
   public var y(default, set):Float;
   public var selected(default, set):Bool;
 
@@ -37,7 +35,6 @@ class MenuItem {
   function set_selected(value:Bool):Bool {
     if (value) {
       textField.setTextFormat(selectedTextFormat);
-      selectSound.play();
     } else {
       textField.setTextFormat(itemTextFormat);
     }

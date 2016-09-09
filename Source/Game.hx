@@ -12,6 +12,8 @@ typedef RoadSegment = {
 };
 
 class Game extends Screen {
+  public static var instance:Game;
+
   var roadTexture:BitmapData = Assets.getBitmapData("assets/road.png");
   var background:BitmapData = Assets.getBitmapData("assets/bg.png");
   var ferrari:PSprite = new PSprite(Assets.getBitmapData("assets/ferrari.png"));
@@ -28,6 +30,8 @@ class Game extends Screen {
 
   public function new() {
     super();
+
+    instance = this;
 
     playerCar = new PlayerCar(this);
     playerCar.z = 1;
@@ -121,6 +125,11 @@ class Game extends Screen {
   }
 
   override public function keyDown(keyCode:Int): Void {
+
+    if(keyCode == 27) {
+      Main.instance.currentScreen = new PauseMenu();
+    }
+
     if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
       playerCar.accelerateStart();
     }

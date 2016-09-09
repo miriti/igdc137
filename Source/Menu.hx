@@ -1,11 +1,15 @@
 package ;
 
 import openfl.display.BitmapData;
+import openfl.media.Sound;
 import openfl.Assets;
 import openfl.text.TextField;
 
 class Menu {
   public var selected_item(default, set):Int = 0;
+
+  private var selectSound:Sound = Assets.getSound("assets/sound/menu_select.wav");
+  private var actionSound:Sound = Assets.getSound("assets/sound/menu_action.wav");
 
   private var items:Array<MenuItem> = new Array<MenuItem>();
   private var _next_item_y:Int = 100;
@@ -52,15 +56,18 @@ class Menu {
 
   public function keyDown(keyCode:Int): Void {
     if (keyCode == 13) {
+      actionSound.play();
       items[selected_item].act();
     }
 
     if ((keyCode == 38) || (keyCode == 87)) {
       selected_item--;
+      selectSound.play();
     }
 
     if ((keyCode == 40) || (keyCode == 83)) {
       selected_item++;
+      selectSound.play();
     }
   }
 
