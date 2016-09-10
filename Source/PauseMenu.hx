@@ -8,13 +8,19 @@ class PauseMenu extends Screen {
   var bg:BitmapData = Assets.getBitmapData('assets/bg.png');
   var logo:MenuLogo = new MenuLogo("Paused");
 
-  var menu:Menu = new Menu();
+  var menu:Menu = new Menu(28);
+  var optionsMenu:OptionsMenu;
+  var currentMenu:Menu;
 
   public function new() {
     super();
 
     logo.x = 160;
     logo.y = 50;
+    
+    optionsMenu = new OptionsMenu(function() {
+      currentMenu = menu;
+    });
 
     menu.addItem("Resume", function() {
       Main.instance.currentScreen = Game.instance;
@@ -23,12 +29,18 @@ class PauseMenu extends Screen {
     menu.addItem("Main Menu", function() {
       Main.instance.currentScreen = new MainMenu();
     });
+    
+    menu.addItem("Options", function() {
+      currentMenu = optionsMenu;
+    });
 
     menu.addItem("Quit", function() {
       System.exit(0);
     });
 
     menu.selected_item = 0;
+    
+    currentMenu = menu;
   }
 
   override public function render() : Void {
@@ -36,11 +48,11 @@ class PauseMenu extends Screen {
       logo.update();
       frameBuffer.draw(logo, logo.transform.matrix);
 
-      menu.draw(frameBuffer);
+      currentMenu.draw(frameBuffer);
   }
 
   override public function keyDown(keyCode:Int):Void {
-    menu.keyDown(keyCode);
+    currentMenu.keyDown(keyCode);
   }
 
 }

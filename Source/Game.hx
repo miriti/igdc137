@@ -52,7 +52,7 @@ class Game extends Screen {
     var phase_x:Float = 0;
     var phase_y:Float = 0;
 
-    for(i in 0...500) {
+    for(i in 0...5000) {
       segments.push({
         x: Math.sin(phase_x) * 200,
         y: 0, //Math.sin(phase_y) * 300,
@@ -122,6 +122,13 @@ class Game extends Screen {
     }
 
     playerCar.update();
+    
+    z_shift -= (playerCar.speed * (10/36)) / 120;
+    
+    while(z_shift < 0) {
+      z_shift = 1 + z_shift;
+      scrollRoad();
+    }
 
     for(car in cars) {
       //car.update();
@@ -135,39 +142,28 @@ class Game extends Screen {
       ].join("\n");
       
     frameBuffer.draw(rpm_hud); //, rpm_hud.transform.matrix);
-
-    /*z_shift -= 0.1;*/
-
-    while(z_shift < 0) {
-      z_shift = 1 + z_shift;
-      scrollRoad();
-    }
   }
 
   override public function keyDown(keyCode:Int): Void {
-    trace( keyCode );
-
-    if(keyCode == 81) {
-      playerCar.gotoGear(playerCar.gear+1);
-    }
-
-    if(keyCode == 90) {
-      playerCar.gotoGear(playerCar.gear-1);
-    }
-
-    if(keyCode == 27) {
+    if(keyCode == Input.KEY_ESCAPE) {
       Main.instance.currentScreen = new PauseMenu();
     }
+    
+    if(keyCode == Input.keyBindings["gear_plus"]) {
+      playerCar.gotoGear(playerCar.gear + 1);
+    }
 
-    if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
-      /*playerCar.accelerateStart();*/
+    if(keyCode == Input.keyBindings["gear_minus"]) {
+      playerCar.gotoGear(playerCar.gear - 1);
+    }
+
+    if( keyCode == Input.keyBindings["accelerate"] ) {
       playerCar.throttle = 1;
     }
   }
 
   override public function keyUp(keyCode:Int): Void {
-    if( Input.keyAccelerate.indexOf(keyCode) != -1 ) {
-      /*playerCar.accelerateEnd();*/
+    if( keyCode == Input.keyBindings["accelerate"] ) {
       playerCar.throttle = 0;
     }
   }

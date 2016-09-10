@@ -8,12 +8,13 @@ import openfl.media.Sound;
 import openfl.Assets;
 
 class MenuItem {
+  public var menu:Menu;
   public var y(default, set):Float;
   public var selected(default, set):Bool;
 
   public var textHeight(get, never):Int;
 
-  var title: String;
+  var title(default, set): String;
   var action: Void -> Void;
   var textField: TextField;
   var shadeTextField: TextField;
@@ -21,6 +22,12 @@ class MenuItem {
   var itemTextFormat: TextFormat;
   var shadeTextFormat: TextFormat;
   var selectedTextFormat: TextFormat;
+  
+  function set_title(value:String): String {
+    textField.text = value;
+    shadeTextField.text = value;
+    return title = value;
+  }
 
   function get_textHeight(): Int {
     return Std.int(textField.textHeight);
@@ -43,7 +50,6 @@ class MenuItem {
   }
 
   public function new(title:String, action: Void -> Void, fontSize:Int) {
-    this.title = title;
     this.action = action;
 
     itemTextFormat = new TextFormat(Assets.getFont("assets/font/stormfaze.ttf").fontName, fontSize, 0xa21487);
@@ -53,12 +59,12 @@ class MenuItem {
     selectedTextFormat.align = shadeTextFormat.align = itemTextFormat.align = TextFormatAlign.CENTER;
 
     textField = new TextField();
-    textField.text = title;
     textField.setTextFormat(itemTextFormat);
 
     shadeTextField = new TextField();
-    shadeTextField.text = title;
     shadeTextField.setTextFormat(shadeTextFormat);
+    
+    this.title = title;
 
     textField.width = shadeTextField.width = Screen.FRAME_WIDTH;
   }
@@ -70,5 +76,9 @@ class MenuItem {
 
   public function act():Void {
     action();
+  }
+  
+  public function keyDown(keyCode:Int):Void {
+    
   }
 }

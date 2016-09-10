@@ -13,7 +13,7 @@ class MainMenu extends Screen {
   var logo:MenuLogo = new MenuLogo("Road Vice'85");
 
   var menu_main:Menu = new Menu();
-  var options_menu:Menu = new Menu(22);
+  var options_menu:Menu;
   var currentMenu:Menu;
 
   public function new() {
@@ -39,19 +39,12 @@ class MainMenu extends Screen {
       System.exit(0);
     });
     #end
-
-    /**
-     * Options Menu
-     */
-    options_menu.addItem("Transmission: auto", function() {});
-    options_menu.addItem("Accelerate: W", function() {});
-    options_menu.addItem("Brake: S", function() {});
-
-    options_menu.addItem("< Back", function() {
+    
+    options_menu = new OptionsMenu(function() {
       currentMenu = menu_main;
     });
 
-    options_menu.selected_item = menu_main.selected_item = 0;
+    menu_main.selected_item = 0;
 
     currentMenu = menu_main;
   }
