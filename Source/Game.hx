@@ -19,12 +19,14 @@ class Game extends Screen {
 
   var playerCar:PlayerCar;
   var cars:Array<Car> = new Array<Car>();
-
-  var rpm_hud:TextField;
+  
+  var rpmHud:RpmHud;
 
   public static inline var ROAD_HWIDTH:Float = 160;
 
   var segments:Array<RoadSegment> = new Array<RoadSegment>();
+  
+  var gameStarted:Bool = false;
 
   public function new() {
     super();
@@ -58,12 +60,10 @@ class Game extends Screen {
       phase_x += Math.PI / 32;
       phase_y += Math.PI / 32;
     }
-
-    rpm_hud = new TextField();
-    rpm_hud.setTextFormat(new TextFormat("_sans", 20, 0xffffff));
-    rpm_hud.text = "0 rpm";
-    rpm_hud.x = 0;
-    rpm_hud.y = 320 - rpm_hud.textHeight;
+    
+    rpmHud = new RpmHud();
+    rpmHud.x = Screen.FRAME_WIDTH - 97;
+    rpmHud.y = Screen.FRAME_HEIGHT - 33;
   }
 
   function scrollRoad() : Void {
@@ -122,7 +122,7 @@ class Game extends Screen {
 
     playerCar.update();
 
-    z_shift -= (playerCar.speed * (10/36)) / 120;
+    z_shift -= ((playerCar.speed * (10/36)) / 120) * 0.5;
 
     while(z_shift < 0) {
       z_shift = 1 + z_shift;
@@ -133,14 +133,10 @@ class Game extends Screen {
       //car.update();
       car.draw(this);
     }
-
-    rpm_hud.text = [
-      "gear: " + playerCar.gear,
-      playerCar.rpm + " rpm",
-      playerCar.speed + " km/h"
-      ].join("\n");
-
-    frameBuffer.draw(rpm_hud); //, rpm_hud.transform.matrix);
+    
+    rpmHud.value = playerCar.rpm / playerCar.rpm_max;
+    rpmHud.speed = Std.int(playerCar.speed);
+    frameBuffer.draw(rpmHud, rpmHud.transform.matrix);
   }
 
   override public function keyDown(keyCode:Int): Void {
@@ -148,16 +144,20 @@ class Game extends Screen {
       Main.instance.currentScreen = new PauseMenu();
     }
 
-    if(keyCode == Input.keyBindings["gear_plus"]) {
-      playerCar.gotoGear(playerCar.gear + 1);
-    }
+    if(gameStarted) {
+      if(keyCode == Input.keyBindings["gear_plus"]) {
+        playerCar.gotoGear(playerCar.gear + 1);
+        rpmHud.gear = playerCar.gear;
+      }
 
-    if(keyCode == Input.keyBindings["gear_minus"]) {
-      playerCar.gotoGear(playerCar.gear - 1);
-    }
+      if(keyCode == Input.keyBindings["gear_minus"]) {
+        playerCar.gotoGear(playerCar.gear - 1);
+        rpmHud.gear = playerCar.gear;
+      }
 
-    if( keyCode == Input.keyBindings["accelerate"] ) {
-      playerCar.throttle = 1;
+      if( keyCode == Input.keyBindings["accelerate"] ) {
+        playerCar.throttle = 1;
+      }
     }
   }
 

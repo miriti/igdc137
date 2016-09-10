@@ -25,7 +25,7 @@ class Main extends Sprite {
 
 		instance = this;
 
-		Assets.getSound("assets/sound/music.ogg").play(0, 9999);
+		//Assets.getSound("assets/sound/music.ogg").play(0, 9999);
 
 		bitmap = new Bitmap();
 		bitmap.scaleX = bitmap.scaleY = 2;

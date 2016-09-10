@@ -18,12 +18,12 @@ class Car {
   public var rpm: Float = 1800;
   public var rpm_idle: Float = 1800; //
   public var rpm_max: Float = 8000;
-  public var rpm_inc: Array<Float> = [0.0, 4000.0, 2500.0, 1400, 1100, 900, 600];
+  public var rpm_inc: Array<Float> = [6000.0, 4000.0, 2500.0, 1400.0, 1100.0, 900.0, 600.0];
   public var gear: Int = 0; // 0 = N
   public var gear_max: Int = 6;
-  public var gear_speed: Array<Float> = [0.0, 25, 40, 70, 100, 160, 240];
+  public var gear_speed: Array<Float> = [0.0, 25.0, 40.0, 70.0, 100.0, 160.0, 240.0];
   public var speed: Float = 0.0;
-  public var engine_braking: Float = 500;
+  public var engine_braking: Float = 3000;
 
   private static var bitmap:Bitmap = null;
   
