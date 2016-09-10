@@ -6,26 +6,20 @@ import openfl.display.BitmapData;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.Assets;
-
-typedef RoadSegment = {
-  x: Float,
-  y: Float,
-  z: Float
-};
+import motion.Actuate;
 
 class Game extends Screen {
   public static var instance:Game;
 
   var roadTexture:BitmapData = Assets.getBitmapData("assets/road.png");
   var background:BitmapData = Assets.getBitmapData("assets/bg.png");
-  var ferrari:PSprite = new PSprite(Assets.getBitmapData("assets/ferrari.png"));
 
   var background_transform:Matrix;
   var z_shift:Float = 0;
 
   var playerCar:PlayerCar;
   var cars:Array<Car> = new Array<Car>();
-  
+
   var rpm_hud:TextField;
 
   public static inline var ROAD_HWIDTH:Float = 160;
@@ -53,16 +47,18 @@ class Game extends Screen {
     var phase_y:Float = 0;
 
     for(i in 0...5000) {
-      segments.push({
-        x: Math.sin(phase_x) * 200,
-        y: 0, //Math.sin(phase_y) * 300,
-        z: 1 + i*0.5
-      });
+      var segment = new RoadSegment();
+
+      segment.x = Math.sin(phase_x) * 200;
+      segment.y = Math.sin(phase_y) * 300;
+      segment.z = 1 + i*0.5;
+
+      segments.push(segment);
 
       phase_x += Math.PI / 32;
       phase_y += Math.PI / 32;
     }
-    
+
     rpm_hud = new TextField();
     rpm_hud.setTextFormat(new TextFormat("_sans", 20, 0xffffff));
     rpm_hud.text = "0 rpm";
@@ -108,6 +104,9 @@ class Game extends Screen {
 
       fillRoadPoly(p1[1], p3[1], p1[0], p2[0], p3[0], p4[0], roadTexture, z_shift);
 
+      segment.drawDecorations(this, z_shift);
+      next_segment.drawDecorations(this, z_shift);
+
       for (car in cars) {
         if((car.z <= segment.z) && (car.z > next_segment.z)) {
           if(segment.y == next_segment.y) {
@@ -122,9 +121,9 @@ class Game extends Screen {
     }
 
     playerCar.update();
-    
+
     z_shift -= (playerCar.speed * (10/36)) / 120;
-    
+
     while(z_shift < 0) {
       z_shift = 1 + z_shift;
       scrollRoad();
@@ -134,13 +133,13 @@ class Game extends Screen {
       //car.update();
       car.draw(this);
     }
-    
+
     rpm_hud.text = [
       "gear: " + playerCar.gear,
       playerCar.rpm + " rpm",
       playerCar.speed + " km/h"
       ].join("\n");
-      
+
     frameBuffer.draw(rpm_hud); //, rpm_hud.transform.matrix);
   }
 
@@ -148,7 +147,7 @@ class Game extends Screen {
     if(keyCode == Input.KEY_ESCAPE) {
       Main.instance.currentScreen = new PauseMenu();
     }
-    
+
     if(keyCode == Input.keyBindings["gear_plus"]) {
       playerCar.gotoGear(playerCar.gear + 1);
     }

@@ -2,12 +2,13 @@
 <project>
 
 	<meta title="Road Vice'85" package="ru.miriti.roadvice85" version="1.0.0" company="Michael Miriti"/>
-	
+
 	<app main="Main" path="Export" file="RoadVice85"/>
 
 	<source path="Source"/>
 
 	<haxelib name="openfl"/>
+	<haxelib name="actuate"/>
 
 	<assets path="Assets" rename="assets"/>
 
