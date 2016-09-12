@@ -12,20 +12,33 @@ class RoadSegment {
 
   public var decorations:Array<DisplayObject> = new Array<DisplayObject>();
 
-  var palmTree:BitmapData = Assets.getBitmapData("assets/palm-tree.png");
-  var palmLeft:Bitmap;
+  static var palmTreeBitmap:BitmapData;
+  var palmTree_left:Bitmap;
+  var palmTree_right:Bitmap;
 
   public function new() {
-    palmLeft = new Bitmap(palmTree);
+    if(palmTreeBitmap == null) {
+       palmTreeBitmap = Assets.getBitmapData("assets/palm-tree.png");
+    }
+    palmTree_left = new Bitmap(palmTreeBitmap);
+    palmTree_right = new Bitmap(palmTreeBitmap);
+
   }
 
-  public function drawDecorations(screen:Screen, z_shift): Void {
-    var scale:Float = 1/(z+z_shift);
-    palmLeft.scaleX = palmLeft.scaleY = scale;
+  public function drawDecorations(screen:Screen): Void {
+    var scale:Float = 1/z;
 
-    palmLeft.x = screen.project_x(-180, z + z_shift) - (palmLeft.width/2);
-    palmLeft.y = screen.project_y(y, z + z_shift) - palmLeft.height;
+    palmTree_left.scaleX = palmTree_left.scaleY = scale;
+    palmTree_right.scaleX = -scale;
+    palmTree_right.scaleY = scale;
 
-    screen.frameBuffer.draw(palmLeft, palmLeft.transform.matrix);
+    palmTree_left.x = screen.project_x(-200 + x, z) - (palmTree_left.width/2);
+    palmTree_left.y = screen.project_y(y, z) - palmTree_left.height;
+
+    palmTree_right.x = screen.project_x(200 + x, z) - (palmTree_right.width/2);
+    palmTree_right.y = screen.project_y(y, z) - palmTree_right.height;
+
+    screen.frameBuffer.draw(palmTree_left, palmTree_left.transform.matrix);
+    screen.frameBuffer.draw(palmTree_right, palmTree_right.transform.matrix);
   }
 }

@@ -19,31 +19,23 @@ class Game extends Screen {
 
   var playerCar:PlayerCar;
   var cars:Array<Car> = new Array<Car>();
-  
+
   var rpmHud:RpmHud;
 
   public static inline var ROAD_HWIDTH:Float = 160;
 
   var segments:Array<RoadSegment> = new Array<RoadSegment>();
-  
+
   var gameStarted:Bool = false;
+
+  var countdownDigits:Array<CountdownDigit> = new Array<CountdownDigit>();
+
+  var counts = ['3', '2', '1', "GO!"];
 
   public function new() {
     super();
 
     instance = this;
-
-    playerCar = new PlayerCar(this);
-    playerCar.z = 1;
-
-    for(i in 0...3) {
-      var new_ai_car = new AICar(this);
-      new_ai_car.x = -100;
-      new_ai_car.z = 2 + i;
-      cars.push(new_ai_car);
-    }
-
-    cars.push(playerCar);
 
     var phase_x:Float = 0;
     var phase_y:Float = 0;
@@ -60,10 +52,48 @@ class Game extends Screen {
       phase_x += Math.PI / 32;
       phase_y += Math.PI / 32;
     }
-    
+
+    playerCar = new PlayerCar(this);
+    playerCar.z = 1;
+
+    for(i in 0...3) {
+      var new_ai_car = new AICar(this);
+      new_ai_car.x = -100 + segments[i+2].x;
+      new_ai_car.z = 2 + i;
+      cars.push(new_ai_car);
+    }
+
+    cars.push(playerCar);
+
     rpmHud = new RpmHud();
     rpmHud.x = Screen.FRAME_WIDTH - 97;
     rpmHud.y = Screen.FRAME_HEIGHT - 33;
+
+    Actuate.timer(0.5).onComplete(function() {
+      nextDigit();
+    });
+  }
+
+  function nextDigit() : Void {
+    var digit = new CountdownDigit(counts.shift());
+    digit.x = Screen.FRAME_WIDTH / 2;
+    digit.y = -100;
+    countdownDigits.push(digit);
+
+    Actuate.tween(digit, 0.2, {
+        y: Screen.FRAME_HEIGHT / 2
+      }).onComplete(function() {
+      Actuate.tween(digit, 0.5, {
+        y: Screen.FRAME_HEIGHT + 100
+        }).delay(0.3).onComplete(function() {
+          if(counts.length > 0) {
+            nextDigit();
+          } else {
+            gameStarted = true;
+            playerCar.gotoGear(1);
+          }
+        });
+      });
   }
 
   function scrollRoad() : Void {
@@ -104,8 +134,8 @@ class Game extends Screen {
 
       fillRoadPoly(p1[1], p3[1], p1[0], p2[0], p3[0], p4[0], roadTexture, z_shift);
 
-      segment.drawDecorations(this, z_shift);
-      next_segment.drawDecorations(this, z_shift);
+      segment.drawDecorations(this);
+      next_segment.drawDecorations(this);
 
       for (car in cars) {
         if((car.z <= segment.z) && (car.z > next_segment.z)) {
@@ -124,19 +154,23 @@ class Game extends Screen {
 
     z_shift -= ((playerCar.speed * (10/36)) / 120) * 0.5;
 
-    while(z_shift < 0) {
-      z_shift = 1 + z_shift;
-      scrollRoad();
-    }
+    //while(z_shift < 0) {
+      //z_shift = 1 + z_shift;
+      //scrollRoad();
+    //}
 
     for(car in cars) {
       //car.update();
       car.draw(this);
     }
-    
+
     rpmHud.value = playerCar.rpm / playerCar.rpm_max;
     rpmHud.speed = Std.int(playerCar.speed);
     frameBuffer.draw(rpmHud, rpmHud.transform.matrix);
+
+    for(digit in countdownDigits) {
+      frameBuffer.draw(digit, digit.transform.matrix);
+    }
   }
 
   override public function keyDown(keyCode:Int): Void {
@@ -154,10 +188,10 @@ class Game extends Screen {
         playerCar.gotoGear(playerCar.gear - 1);
         rpmHud.gear = playerCar.gear;
       }
+    }
 
-      if( keyCode == Input.keyBindings["accelerate"] ) {
-        playerCar.throttle = 1;
-      }
+    if( keyCode == Input.keyBindings["accelerate"] ) {
+      playerCar.throttle = 1;
     }
   }
 

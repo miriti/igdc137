@@ -3,7 +3,7 @@
 
 	<meta title="Road Vice'85" package="ru.miriti.roadvice85" version="1.0.0" company="Michael Miriti"/>
 
-	<app main="Main" path="Export" file="RoadVice85"/>
+	<app main="Intro" path="Export" file="RoadVice85"/>
 
 	<source path="Source"/>
 
@@ -12,6 +12,6 @@
 
 	<assets path="Assets" rename="assets"/>
 
-	<window width="640" height="480" fps="119" resizable="false" />
+	<window width="640" height="480" fps="119" resizable="false" background="#0a0026" />
 
 </project>
