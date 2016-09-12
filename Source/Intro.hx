@@ -1,5 +1,6 @@
 package;
 
+import openfl.events.KeyboardEvent;
 import openfl.display.Sprite;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
@@ -10,6 +11,7 @@ import motion.Actuate;
 class Intro extends Sprite {
 
   var igdcLogo:Bitmap;
+  var main:Main = null;
 
   public function new() {
     super();
@@ -22,10 +24,25 @@ class Intro extends Sprite {
 
     Actuate.tween(igdcLogo, 3, {alpha: 1}).delay(0.3).onComplete(function() {
       Actuate.tween(igdcLogo, 1, {alpha: 0}).delay(1).onComplete(function() {
-        removeChild(igdcLogo);
-        addChild(new Main());
+        startGame();
       });
     });
+    
+    Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+  }
+  
+  function startGame() {
+    Actuate.stop(igdcLogo);
+    Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+    removeChild(igdcLogo);
+    if(main == null) {
+      main = new Main();
+      addChild(main);
+    }
+  }
+  
+  function onKeyDown(e:KeyboardEvent): Void {
+    startGame();
   }
 
 }

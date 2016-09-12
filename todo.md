@@ -1,6 +1,7 @@
 # TODO
 
-- [ ] Countdown
+- [ ] Automatic transmission option!!!
+- [x] Countdown
 - [ ] Background
 - [ ] Turns
 - [ ] Decorations
@@ -9,3 +10,4 @@
 - [ ] Intro
 - [ ] Automatic transmission
 - [ ] Engine sound
+- [ ] Generate track

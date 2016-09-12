@@ -15,7 +15,6 @@ class Game extends Screen {
   var background:BitmapData = Assets.getBitmapData("assets/bg.png");
 
   var background_transform:Matrix;
-  var z_shift:Float = 0;
 
   var playerCar:PlayerCar;
   var cars:Array<Car> = new Array<Car>();
@@ -31,8 +30,14 @@ class Game extends Screen {
   var countdownDigits:Array<CountdownDigit> = new Array<CountdownDigit>();
 
   var counts = ['3', '2', '1', "GO!"];
+  
+  var road_shift = {
+    x: 0,
+    y: 0,
+    z: 0
+  }
 
-  public function new() {
+  public function new(playerName: String) {
     super();
 
     instance = this;
@@ -45,7 +50,7 @@ class Game extends Screen {
 
       segment.x = Math.sin(phase_x) * 200;
       segment.y = Math.sin(phase_y) * 300;
-      segment.z = 1 + i*0.5;
+      segment.z = 1 + i * 0.5;
 
       segments.push(segment);
 
@@ -53,11 +58,21 @@ class Game extends Screen {
       phase_y += Math.PI / 32;
     }
 
-    playerCar = new PlayerCar(this);
+    playerCar = new PlayerCar(this, playerName);
     playerCar.z = 1;
+    
+    var names:Array<String> = Names.igdc;
+    
+    names.filter(function(n:String): Bool {
+      return (n != playerName);
+    });
+    
+    names.sort(function(a:String, b:String): Int {
+      return Math.random() > 0.5 ? -1 : 1;
+    });
 
     for(i in 0...3) {
-      var new_ai_car = new AICar(this);
+      var new_ai_car = new AICar(this, names.pop());
       new_ai_car.x = -100 + segments[i+2].x;
       new_ai_car.z = 2 + i;
       cars.push(new_ai_car);
@@ -96,18 +111,9 @@ class Game extends Screen {
       });
   }
 
-  function scrollRoad() : Void {
-    var dx = segments[0].x - segments[1].x;
-    var dy = segments[0].y - segments[1].y;
-    var dz = segments[0].z - segments[1].z;
-
-    segments.shift();
-
-    for(s in segments) {
-      s.x += dx;
-      s.y += dy;
-      s.z += dz;
-    }
+  function scrollRoad(amount:Float) : Void {
+    return ;
+    // TODO: Move road shift
   }
 
   override function render() : Void {
@@ -132,9 +138,8 @@ class Game extends Screen {
 
       frameBuffer.fillRect(new Rectangle(0, p1[1], Screen.FRAME_WIDTH, Screen.FRAME_HEIGHT-p3[1]), 0xff18183d);
 
-      fillRoadPoly(p1[1], p3[1], p1[0], p2[0], p3[0], p4[0], roadTexture, z_shift);
+      fillRoadPoly(p1[1], p3[1], p1[0], p2[0], p3[0], p4[0], roadTexture);
 
-      segment.drawDecorations(this);
       next_segment.drawDecorations(this);
 
       for (car in cars) {
@@ -151,13 +156,8 @@ class Game extends Screen {
     }
 
     playerCar.update();
-
-    z_shift -= ((playerCar.speed * (10/36)) / 120) * 0.5;
-
-    //while(z_shift < 0) {
-      //z_shift = 1 + z_shift;
-      //scrollRoad();
-    //}
+    
+    scrollRoad(((playerCar.speed * (10/36)) / 120) * 0.5);
 
     for(car in cars) {
       //car.update();

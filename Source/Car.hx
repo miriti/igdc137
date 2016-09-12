@@ -29,7 +29,7 @@ class Car {
   
   var game:Game;
 
-  public function new(game: Game) {
+  public function new(game: Game, name: String) {
     
     this.game = game;
 

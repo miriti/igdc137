@@ -51,10 +51,12 @@ class MenuItem {
 
   public function new(title:String, action: Void -> Void, fontSize:Int) {
     this.action = action;
+    
+    var fontName = Assets.getFont("assets/font/stormfaze.ttf").fontName;
 
-    itemTextFormat = new TextFormat(Assets.getFont("assets/font/stormfaze.ttf").fontName, fontSize, 0xa21487);
-    shadeTextFormat = new TextFormat(Assets.getFont("assets/font/stormfaze.ttf").fontName, fontSize, 0x310242);
-    selectedTextFormat = new TextFormat(Assets.getFont("assets/font/stormfaze.ttf").fontName, fontSize, 0xf556f2);
+    itemTextFormat = new TextFormat(fontName, fontSize, 0xa21487);
+    shadeTextFormat = new TextFormat(fontName, fontSize, 0x310242);
+    selectedTextFormat = new TextFormat(fontName, fontSize, 0xf556f2);
 
     selectedTextFormat.align = shadeTextFormat.align = itemTextFormat.align = TextFormatAlign.CENTER;
 
